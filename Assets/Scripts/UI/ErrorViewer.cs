@@ -2,7 +2,7 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 
-public class ErrorText : MonoBehaviour
+public class ErrorViewer : MonoBehaviour
 {
     [SerializeField] private TextMeshPro _textMeshPro;
     [SerializeField] private float _fadeTime;
