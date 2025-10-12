@@ -1,0 +1,95 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class RobotSpawner : Spawner<Robot>
+{
+    [SerializeField] private int _startRobots = 3;
+
+    [SerializeField] private SpawnZone _spawnZone;
+    [SerializeField] private int _maxRobots;
+
+    [SerializeField] private Storage _Storage;
+
+    private float _spawnDelay = 0.2f;
+
+    private WaitForSeconds _waitSpawn;
+
+    public List<Robot> AvalaibleRobots { get; private set; }
+
+    protected override void Awake()
+    {
+        _waitSpawn = new WaitForSeconds(_spawnDelay);
+
+        base.Awake();
+    }
+
+    private void Start()
+    {
+        AvalaibleRobots = new List<Robot>();
+        SpawnStartRobots();
+    }
+
+    private void SpawnStartRobots()
+    {
+        StartCoroutine(SpawnRobot());
+    }
+
+    private IEnumerator SpawnRobot()
+    {
+        for (int i = 0; i < _startRobots; i++)
+        {
+            if (_startRobots > _maxRobots)
+                _startRobots = _maxRobots;
+
+            Pool.Get();
+
+            yield return _waitSpawn;
+        }
+    }
+
+    protected override Robot OnInstantiate()
+    {
+        if (AvalaibleRobots.Count >= _maxRobots)
+        {
+            Debug.Log("превышено макс кол-во роботов");
+
+            return null;
+        }
+
+        Robot robot = base.OnInstantiate();
+
+        robot.GetComponent<RobotMover>().SetStorage( _Storage );
+
+        return robot;
+    }
+
+    protected override void OnGet(Robot pooledObject)
+    {
+        if(pooledObject == null)
+            return;
+
+        Vector3 spawnpoint = _spawnZone.GetRandomAvalaibleSpawnpoint();
+
+        if (spawnpoint == Vector3.zero)
+        {
+            Pool.Release(pooledObject);
+            return;
+        }
+
+        pooledObject.GetComponent<RobotMover>().SetSpawnpoint(spawnpoint);
+        pooledObject.transform.position = spawnpoint;
+        
+        base.OnGet(pooledObject);
+
+        AvalaibleRobots.Add(pooledObject);
+
+    }
+
+    protected override void OnRelease(Robot pooledObject)
+    {
+        base.OnRelease(pooledObject);
+
+        AvalaibleRobots.Remove(pooledObject);
+    }
+}
