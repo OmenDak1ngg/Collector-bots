@@ -5,7 +5,6 @@ using UnityEngine;
 public class Resource : MonoBehaviour
 {
     public bool IsResourceTaked {  get; private set; }
-
     public Collider Collider { get; private set; }  
     public Rigidbody Rigidbody { get; private set; }
 

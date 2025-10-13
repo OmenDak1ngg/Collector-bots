@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 
+[RequireComponent(typeof(Collider))]
 public class ResourceGroundDetector : MonoBehaviour
 {
     [SerializeField] private Resource _resource;

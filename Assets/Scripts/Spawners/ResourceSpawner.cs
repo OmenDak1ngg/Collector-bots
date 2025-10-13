@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using TMPro;
 using UnityEngine;
 
 public class ResourceSpawner : Spawner<Resource>
@@ -9,8 +8,36 @@ public class ResourceSpawner : Spawner<Resource>
     [SerializeField] private int _maxResourcesCount = 3;
     [SerializeField] private float _delay;
 
+    [SerializeField] private Storage _storage;
+
     private int _currentResourcesCount;
     private WaitForSeconds _waitTime;
+
+    private void OnEnable()
+    {
+        _storage.ResourceAdded += OnRelease;
+    }
+
+    private void OnDisable()
+    {
+        _storage.ResourceAdded -= OnRelease;
+    }
+
+    private void Start()
+    {
+        StartCoroutine(SpawnObjects());
+    }
+
+    private IEnumerator SpawnObjects()
+    {
+        while (enabled)
+        {
+            if (_currentResourcesCount < _maxResourcesCount)
+                Pool.Get();
+
+            yield return _waitTime;
+        }
+    }
 
     protected override void Awake()
     {
@@ -18,22 +45,6 @@ public class ResourceSpawner : Spawner<Resource>
 
         _currentResourcesCount = 0;
         _waitTime = new WaitForSeconds(_delay);
-    }
-
-    private void Start()
-    {
-        StartCoroutine(SpawnObjects()); 
-    }
-
-    private IEnumerator SpawnObjects()
-    {
-        while (enabled)
-        {
-            if(_currentResourcesCount < _maxResourcesCount)
-                Pool.Get();
-
-            yield return _waitTime;
-        }
     }
 
     protected override void OnGet(Resource pooledObject)

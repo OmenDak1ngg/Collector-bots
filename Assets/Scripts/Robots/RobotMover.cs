@@ -37,16 +37,6 @@ public class RobotMover : MonoBehaviour
         _grabber = GetComponent<ResourceGrabber>();
     }
 
-    public void SetSpawnpoint(Vector3 spawnpoint)
-    {
-        _spawnpoint = spawnpoint;
-    }
-
-    public void StartMoveToResource(Resource resource)
-    {
-        resource.SetTaked();
-        StartCoroutine(MoveToResource(resource));
-    }
 
     private IEnumerator MoveToResource(Resource resource)
     {
@@ -79,7 +69,7 @@ public class RobotMover : MonoBehaviour
     private IEnumerator MoveToSpawn()
     {
         Coroutine coroutine = StartCoroutine(Move(_spawnpoint));
-    
+
         yield return coroutine;
 
         GetComponent<Robot>().SetUnbusy();
@@ -94,19 +84,10 @@ public class RobotMover : MonoBehaviour
 
         _agent.SetDestination(targetPosition);
 
-        while(Vector3.SqrMagnitude(transform.position - targetPosition) > _distanceError)
+        while (Vector3.SqrMagnitude(transform.position - targetPosition) > _distanceError)
             yield return null;
 
         _agent.ResetPath();
-
-        //while (Vector3.SqrMagnitude(transform.position - targetPosition) > _distanceError)
-        //{
-        //    transform.LookAt(targetPosition);
-
-        //    transform.position = Vector3.MoveTowards(transform.position, targetPosition, _speed * Time.deltaTime);
-
-        //    yield return null;
-        //}
     }
 
     private IEnumerator Move(Vector3 targetPosition)
@@ -117,6 +98,17 @@ public class RobotMover : MonoBehaviour
             yield return null;
 
         _agent.ResetPath();
+    }
+
+    public void SetSpawnpoint(Vector3 spawnpoint)
+    {
+        _spawnpoint = spawnpoint;
+    }
+
+    public void StartMoveToResource(Resource resource)
+    {
+        resource.SetTaked();
+        StartCoroutine(MoveToResource(resource));
     }
 
     public void SetStorage(Storage Storage)

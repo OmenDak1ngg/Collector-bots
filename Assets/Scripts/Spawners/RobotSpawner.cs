@@ -11,6 +11,11 @@ public class RobotSpawner : Spawner<Robot>
 
     [SerializeField] private Storage _Storage;
 
+    [SerializeField] private ErrorViewer _errorViewer;
+
+    private readonly string _noSpaceText = "нет свободного места для робота";
+    private readonly string _maxRobotsText = "превышено макс кол-во роботов";
+
     private float _spawnDelay = 0.2f;
 
     private WaitForSeconds _waitSpawn;
@@ -52,7 +57,7 @@ public class RobotSpawner : Spawner<Robot>
     {
         if (AvalaibleRobots.Count >= _maxRobots)
         {
-            Debug.Log("превышено макс кол-во роботов");
+            _errorViewer.ShowText(_maxRobotsText);
 
             return null;
         }
@@ -73,6 +78,7 @@ public class RobotSpawner : Spawner<Robot>
 
         if (spawnpoint == Vector3.zero)
         {
+            _errorViewer.ShowText(_noSpaceText);
             Pool.Release(pooledObject);
             return;
         }

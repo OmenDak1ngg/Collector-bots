@@ -4,7 +4,7 @@ using UnityEngine;
 public class ResourceViewer : MonoBehaviour
 {
     [SerializeField] private Storage _storage;
-    [SerializeField] private TextMeshPro _text;
+    [SerializeField] private TextMeshProUGUI _text;
 
     private void OnEnable()
     {

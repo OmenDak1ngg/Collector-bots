@@ -1,4 +1,3 @@
-using Mono.Cecil;
 using System;
 using System.Collections;
 using Unity.VisualScripting;
@@ -64,25 +63,14 @@ public class ResourceGrabber : MonoBehaviour
 
         yield return coroutine;
 
-        storage.IncreaseResources();
         _carriedResource.transform.parent = null;
-        _carriedResource.gameObject.SetActive(false);
-
+        storage.AddResource(_carriedResource);
         PuttedResource?.Invoke();
     }
 
     private IEnumerator MoveResourceToPoint(GameObject point, Resource resource)
     {
         Vector3 resourcePosition = resource.transform.position;
-
-        //while (resourcePosition.y != point.transform.position.y)
-        //{
-        //    resourcePosition.y = Mathf.MoveTowards(resourcePosition.y, point.transform.position.y, _grabSpeed * Time.deltaTime);
-
-        //    resource.transform.position = resourcePosition;
-
-        //    yield return null;
-        //}
 
         while (resourcePosition != point.transform.position)
         {

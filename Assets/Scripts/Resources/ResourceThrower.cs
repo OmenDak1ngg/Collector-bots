@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 
-
 public class ResourceThrower : MonoBehaviour
 {
     [SerializeField] private float _force;

@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections;
 using UnityEngine;
+
 public class UserInput : MonoBehaviour
 {
     private readonly KeyCode ScanKey = KeyCode.LeftAlt;
