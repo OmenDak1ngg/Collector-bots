@@ -152,6 +152,7 @@ Transform:
   - {fileID: 512773292}
   - {fileID: 1666218847}
   - {fileID: 729091717}
+  - {fileID: 414842102}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &59834333
@@ -567,6 +568,50 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 1
+--- !u!1 &414842100
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 414842102}
+  - component: {fileID: 414842101}
+  m_Layer: 0
+  m_Name: ResourceTracker
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &414842101
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 414842100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f89bbc95302ed94d98a1ec8de8ea476, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &414842102
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 414842100}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -12.129063, y: -7.543861, z: 24.314316}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 46787264}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &480267872
 GameObject:
   m_ObjectHideFlags: 0
@@ -1155,7 +1200,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1249549583879913045, guid: b252a8cf039a238438d3204e5e63307b, type: 3}
       propertyPath: m_Name
-      value: brewery house
+      value: Base
       objectReference: {fileID: 0}
     - target: {fileID: 1881548161446995183, guid: b252a8cf039a238438d3204e5e63307b, type: 3}
       propertyPath: m_LocalScale.x
@@ -1489,6 +1534,7 @@ MonoBehaviour:
   _maxRobots: 10
   _Storage: {fileID: 869325308}
   _errorViewer: {fileID: 1947660968}
+  _resourceTracker: {fileID: 414842101}
 --- !u!1 &1159511354
 GameObject:
   m_ObjectHideFlags: 0
@@ -6871,7 +6917,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6f561b5c1bf00a4eab189f21537df71, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _prefab: {fileID: 6390952934866712978, guid: 9a1fa11730ab2a9418ceffb90646da31, type: 3}
+  _prefab: {fileID: 2197613482782889175, guid: a43b65fec1d1eb14f9f22cf49a77b926, type: 3}
   _thrower: {fileID: 729091716}
   _maxResourcesCount: 4
   _delay: 3
@@ -6948,6 +6994,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _scanRadius: 49.57
   _messageViewer: {fileID: 1159511359}
+  _resourceTracker: {fileID: 414842101}
 --- !u!114 &1728103653
 MonoBehaviour:
   m_ObjectHideFlags: 0

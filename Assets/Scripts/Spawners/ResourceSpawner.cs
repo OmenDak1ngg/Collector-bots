@@ -59,7 +59,6 @@ public class ResourceSpawner : Spawner<Resource>
     protected override void OnRelease(Resource pooledObject)
     {
         base.OnRelease(pooledObject);
-        pooledObject.SetUnTaked();
         pooledObject.Rigidbody.isKinematic = false;
         _currentResourcesCount -= 1;
     }

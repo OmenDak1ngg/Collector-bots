@@ -38,9 +38,9 @@ public class Base : MonoBehaviour
             if(robot.IsBusy)
                 continue;
 
-            robot.GetComponent<RobotMover>().StartMoveToResource(closestResource);
+            robot.MoveToResource(closestResource);
 
-            robot.SetBusy();
+            robot.MarkBusy();
             return;
         }
 

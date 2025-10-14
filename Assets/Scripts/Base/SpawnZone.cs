@@ -7,6 +7,8 @@ public class SpawnZone : MonoBehaviour
     [SerializeField] private int _maxCountOfAttempts = 50;
     [SerializeField] private ErrorViewer _errorViewer;
 
+    private const int _sizeDivider = 2;
+
     private bool IsSpawnpointTaked(Vector3 position)
     {
         Collider[] colliders = Physics.OverlapSphere(position, _minDistanceBetweenRobots);
@@ -33,8 +35,8 @@ public class SpawnZone : MonoBehaviour
         {
             attempts++;
 
-            float randomX = Random.Range(-sizeX / 2, sizeX / 2);
-            float randomZ = Random.Range(-sizeZ / 2, sizeZ / 2);
+            float randomX = Random.Range(-sizeX / _sizeDivider, sizeX / _sizeDivider);
+            float randomZ = Random.Range(-sizeZ / _sizeDivider, sizeZ / _sizeDivider);
 
             randomSpawnpoint = transform.position + new Vector3(randomX, 0, randomZ);
 

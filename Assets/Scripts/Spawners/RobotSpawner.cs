@@ -5,13 +5,11 @@ using UnityEngine;
 public class RobotSpawner : Spawner<Robot>
 {
     [SerializeField] private int _startRobots = 3;
-
     [SerializeField] private SpawnZone _spawnZone;
     [SerializeField] private int _maxRobots;
-
     [SerializeField] private Storage _Storage;
-
     [SerializeField] private ErrorViewer _errorViewer;
+    [SerializeField] private ResourceTracker _resourceTracker;
 
     private readonly string _noSpaceText = "нет свободного места для робота";
     private readonly string _maxRobotsText = "превышено макс кол-во роботов";
@@ -64,14 +62,16 @@ public class RobotSpawner : Spawner<Robot>
 
         Robot robot = base.OnInstantiate();
 
-        robot.GetComponent<RobotMover>().SetStorage( _Storage );
+        robot.Mover.SetStorage(_Storage);
+        robot.Mover.SetResourceTracket(_resourceTracker);
+        robot.ResourceGrabber.SetResourceTracker(_resourceTracker);
 
         return robot;
     }
 
     protected override void OnGet(Robot pooledObject)
     {
-        if(pooledObject == null)
+        if (pooledObject == null)
             return;
 
         Vector3 spawnpoint = _spawnZone.GetRandomAvalaibleSpawnpoint();
@@ -85,7 +85,7 @@ public class RobotSpawner : Spawner<Robot>
 
         pooledObject.GetComponent<RobotMover>().SetSpawnpoint(spawnpoint);
         pooledObject.transform.position = spawnpoint;
-        
+
         base.OnGet(pooledObject);
 
         AvalaibleRobots.Add(pooledObject);

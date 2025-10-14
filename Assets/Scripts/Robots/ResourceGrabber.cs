@@ -1,16 +1,14 @@
 using System;
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class ResourceGrabber : MonoBehaviour
 {
     [SerializeField] private ResourceCarryPoint _carryPoint;
-
     [SerializeField] private float _grabSpeed;
-
+    
+    private ResourceTracker _resourceTracker;
     private RobotMover _mover;
-
     private Resource _carriedResource;
 
     public event Action ResourceGrabbed;
@@ -35,7 +33,12 @@ public class ResourceGrabber : MonoBehaviour
 
     private void StartGrabResource(Resource resource)
     {
-       StartCoroutine(GrabResource(resource));
+        StartCoroutine(GrabResource(resource.transform));
+        
+        resource.transform.parent = transform;
+        resource.Rigidbody.isKinematic = true;
+        resource.Collider.isTrigger = true;
+        _carriedResource = resource;
     }
 
     private void StartPutResource(Storage storage)
@@ -43,41 +46,42 @@ public class ResourceGrabber : MonoBehaviour
         StartCoroutine(PutResourceToStorage(storage));
     }
 
-    private IEnumerator GrabResource(Resource resource)
-    {
-        resource.transform.parent = transform;
-        resource.Rigidbody.isKinematic = true;
-        resource.Collider.isTrigger = true;
-        
-        Coroutine coroutine = StartCoroutine(MoveResourceToPoint(_carryPoint.GameObject(), resource));
+    private IEnumerator GrabResource(Transform resourceTranform)
+    {   
+        Coroutine coroutine = StartCoroutine(MoveResourceToPoint(_carryPoint.transform, resourceTranform));
 
         yield return coroutine;
 
-        _carriedResource = resource;
         ResourceGrabbed?.Invoke();
     }
 
     private IEnumerator PutResourceToStorage(Storage storage)
     {
-        Coroutine coroutine = StartCoroutine(MoveResourceToPoint(storage.GameObject(), _carriedResource));
+        Coroutine coroutine = StartCoroutine(MoveResourceToPoint(storage.transform, _carriedResource.transform));
 
         yield return coroutine;
 
         _carriedResource.transform.parent = null;
         storage.AddResource(_carriedResource);
         PuttedResource?.Invoke();
+        _resourceTracker.UnMarkTaked(_carriedResource);
     }
 
-    private IEnumerator MoveResourceToPoint(GameObject point, Resource resource)
+    private IEnumerator MoveResourceToPoint(Transform pointTransform, Transform resourceTransform)
     {
-        Vector3 resourcePosition = resource.transform.position;
+        Vector3 resourcePosition = resourceTransform.position;
 
-        while (resourcePosition != point.transform.position)
+        while (resourcePosition != pointTransform.position)
         {
-            resourcePosition = Vector3.MoveTowards(resourcePosition, point.transform.position, _grabSpeed * Time.deltaTime);
-            resource.transform.position = resourcePosition;
+            resourcePosition = Vector3.MoveTowards(resourcePosition, pointTransform.position, _grabSpeed * Time.deltaTime);
+            resourceTransform.position = resourcePosition;
 
             yield return null;
         }
+    }
+
+    public void SetResourceTracker(ResourceTracker tracker)
+    {
+        _resourceTracker = tracker;
     }
 }

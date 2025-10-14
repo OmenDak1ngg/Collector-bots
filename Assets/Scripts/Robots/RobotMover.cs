@@ -7,13 +7,12 @@ using UnityEngine.AI;
 public class RobotMover : MonoBehaviour
 {
     [SerializeField] private float _speed;
-
     [SerializeField] private float _distanceError;
-
+    
+    private ResourceTracker _resourceTracket;
     private Storage _Storage;
     private ResourceGrabber _grabber;
     private NavMeshAgent _agent;
-
     private Vector3 _spawnpoint;
 
     public event Action<Storage> ReachedStorage;
@@ -72,7 +71,7 @@ public class RobotMover : MonoBehaviour
 
         yield return coroutine;
 
-        GetComponent<Robot>().SetUnbusy();
+        GetComponent<Robot>().UnMarkUnbusy();
     }
 
 
@@ -105,9 +104,14 @@ public class RobotMover : MonoBehaviour
         _spawnpoint = spawnpoint;
     }
 
+    public void SetResourceTracket(ResourceTracker tracker)
+    {
+        _resourceTracket = tracker;
+    }
+
     public void StartMoveToResource(Resource resource)
     {
-        resource.SetTaked();
+        _resourceTracket.MarkTaked(resource);
         StartCoroutine(MoveToResource(resource));
     }
 

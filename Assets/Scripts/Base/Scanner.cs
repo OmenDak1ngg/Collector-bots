@@ -4,6 +4,7 @@ public class Scanner : MonoBehaviour
 {
     [SerializeField] private float _scanRadius;
     [SerializeField] private MessageViewer _messageViewer;
+    [SerializeField] private ResourceTracker _resourceTracker;
 
     private readonly string _scanStartedText = "скан начался";
 
@@ -23,16 +24,16 @@ public class Scanner : MonoBehaviour
 
         for (int i = 0; i < objects.Length; i++)
         {
-            if (objects[i].TryGetComponent<Resource>(out Resource resource) == false || resource.IsResourceTaked)
+            if (objects[i].TryGetComponent<Resource>(out Resource resource) == false || _resourceTracker.IsResourceTaked(resource))
                 continue;
 
             if (isResourceFirst)
             {
                 closestResource = resource;
+                isResourceFirst = false;
+
                 continue;
             }
-
-            isResourceFirst = false;
 
             if (Vector3.SqrMagnitude(transform.position - resource.transform.position) <
                 Vector3.SqrMagnitude(transform.position - closestResource.transform.position))

@@ -8,20 +8,29 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent))]
 public class Robot : MonoBehaviour
 {
+    public RobotMover Mover { get; private set; }   
+    public ResourceGrabber ResourceGrabber { get; private set; }
     public bool IsBusy { get; private set; }
 
     private void Awake()
     {
+        ResourceGrabber = GetComponent<ResourceGrabber>();
+        Mover = GetComponent<RobotMover>();
         IsBusy = false;
     }
 
-    public void SetBusy()
+    public void MarkBusy()
     {
         IsBusy = true;
     }
 
-    public void SetUnbusy()
+    public void UnMarkUnbusy()
     {
         IsBusy = false;
+    }
+
+    public void MoveToResource(Resource resource)
+    {
+        Mover.StartMoveToResource(resource);
     }
 }
