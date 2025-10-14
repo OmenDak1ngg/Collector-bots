@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Collider))]
 public class Storage : MonoBehaviour
 {
     [SerializeField] private ErrorViewer _errorViewer;
@@ -16,6 +17,14 @@ public class Storage : MonoBehaviour
     private void Awake()
     {
         _resourceCount = 0;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.TryGetComponent<Resource>(out Resource resource))
+        {
+            AddResource(resource);
+        }
     }
 
     public void DecreaseResources(int decreaseCount)

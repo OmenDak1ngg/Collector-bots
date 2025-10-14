@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,7 +8,6 @@ public class RobotSpawner : Spawner<Robot>
     [SerializeField] private int _startRobots = 3;
     [SerializeField] private SpawnZone _spawnZone;
     [SerializeField] private int _maxRobots;
-    [SerializeField] private Storage _Storage;
     [SerializeField] private ErrorViewer _errorViewer;
     [SerializeField] private ResourceTracker _resourceTracker;
 
@@ -19,6 +19,8 @@ public class RobotSpawner : Spawner<Robot>
     private WaitForSeconds _waitSpawn;
 
     public List<Robot> AvalaibleRobots { get; private set; }
+
+    public event Action<Robot> RobotCreated;
 
     protected override void Awake()
     {
@@ -62,9 +64,7 @@ public class RobotSpawner : Spawner<Robot>
 
         Robot robot = base.OnInstantiate();
 
-        robot.Mover.SetStorage(_Storage);
-        robot.Mover.SetResourceTracket(_resourceTracker);
-        robot.ResourceGrabber.SetResourceTracker(_resourceTracker);
+        RobotCreated?.Invoke(robot);
 
         return robot;
     }

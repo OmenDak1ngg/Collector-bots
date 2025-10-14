@@ -41,39 +41,38 @@ public class ResourceGrabber : MonoBehaviour
         _carriedResource = resource;
     }
 
-    private void StartPutResource(Storage storage)
+    private void StartPutResource(Vector3 storagePosition)
     {
-        StartCoroutine(PutResourceToStorage(storage));
+        StartCoroutine(PutResourceToStorage(storagePosition));
     }
 
     private IEnumerator GrabResource(Transform resourceTranform)
     {   
-        Coroutine coroutine = StartCoroutine(MoveResourceToPoint(_carryPoint.transform, resourceTranform));
+        Coroutine coroutine = StartCoroutine(MoveResourceToPoint(_carryPoint.transform.position, resourceTranform));
 
         yield return coroutine;
 
         ResourceGrabbed?.Invoke();
     }
 
-    private IEnumerator PutResourceToStorage(Storage storage)
+    private IEnumerator PutResourceToStorage(Vector3 storagePosition)
     {
-        Coroutine coroutine = StartCoroutine(MoveResourceToPoint(storage.transform, _carriedResource.transform));
+        Coroutine coroutine = StartCoroutine(MoveResourceToPoint(storagePosition, _carriedResource.transform));
 
         yield return coroutine;
 
         _carriedResource.transform.parent = null;
-        storage.AddResource(_carriedResource);
         PuttedResource?.Invoke();
         _resourceTracker.UnMarkTaked(_carriedResource);
     }
 
-    private IEnumerator MoveResourceToPoint(Transform pointTransform, Transform resourceTransform)
+    private IEnumerator MoveResourceToPoint(Vector3 pointPosition, Transform resourceTransform)
     {
         Vector3 resourcePosition = resourceTransform.position;
 
-        while (resourcePosition != pointTransform.position)
+        while (resourcePosition != pointPosition)
         {
-            resourcePosition = Vector3.MoveTowards(resourcePosition, pointTransform.position, _grabSpeed * Time.deltaTime);
+            resourcePosition = Vector3.MoveTowards(resourcePosition, pointPosition, _grabSpeed * Time.deltaTime);
             resourceTransform.position = resourcePosition;
 
             yield return null;
