@@ -1396,6 +1396,7 @@ GameObject:
   - component: {fileID: 869325307}
   - component: {fileID: 869325306}
   - component: {fileID: 869325308}
+  - component: {fileID: 869325309}
   m_Layer: 0
   m_Name: Storage
   m_TagString: Untagged
@@ -1484,6 +1485,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _errorViewer: {fileID: 1947660968}
+--- !u!65 &869325309
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 869325302}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0.0000009536743, y: 0, z: 0.00000023841858}
 --- !u!1 &1104366731
 GameObject:
   m_ObjectHideFlags: 0
@@ -1532,7 +1554,6 @@ MonoBehaviour:
   _startRobots: 3
   _spawnZone: {fileID: 1894137249}
   _maxRobots: 10
-  _Storage: {fileID: 869325308}
   _errorViewer: {fileID: 1947660968}
   _resourceTracker: {fileID: 414842101}
 --- !u!1 &1159511354
@@ -7011,6 +7032,8 @@ MonoBehaviour:
   _robotSpawner: {fileID: 1104366733}
   _userInput: {fileID: 524963241}
   _errorViewer: {fileID: 1947660968}
+  _storage: {fileID: 869325308}
+  _resourceTracker: {fileID: 414842101}
 --- !u!4 &1728103657 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1881548161446995183, guid: b252a8cf039a238438d3204e5e63307b, type: 3}

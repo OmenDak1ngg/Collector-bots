@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections;
+using TMPro;
+using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(Collider))]
@@ -8,9 +11,28 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent))]
 public class Robot : MonoBehaviour
 {
+    private Coroutine _coroutine;
+    private Vector3 _storagePostion;
+    private Vector3 _spawnpointPosition;
+
     public RobotMover Mover { get; private set; }   
     public ResourceGrabber ResourceGrabber { get; private set; }
     public bool IsBusy { get; private set; }
+
+    public event Action<Resource> ReachedResource;
+    public event Action<Vector3> ReachedStorage;
+
+    private void OnEnable()
+    {
+        ResourceGrabber.ResourceGrabbed += StartMoveToStorage;
+        ResourceGrabber.PuttedResource += StartMoveToSpawnpoint;
+    }
+
+    private void OnDisable()
+    {
+        ResourceGrabber.ResourceGrabbed -= StartMoveToStorage;
+        ResourceGrabber.PuttedResource -= StartMoveToSpawnpoint;
+    }
 
     private void Awake()
     {
@@ -19,18 +41,56 @@ public class Robot : MonoBehaviour
         IsBusy = false;
     }
 
-    public void MarkBusy()
+    private IEnumerator MoveToResource(Resource resource)
     {
         IsBusy = true;
+        _coroutine = StartCoroutine(Mover.Move(resource.transform.position));
+
+        yield return _coroutine;
+
+        ReachedResource?.Invoke(resource);
     }
 
-    public void UnMarkUnbusy()
+    private IEnumerator MoveToStorage()
     {
+        _coroutine = StartCoroutine(Mover.Move(_storagePostion));
+
+        yield return _coroutine;
+
+        ReachedStorage?.Invoke(_storagePostion);
+    }
+
+    private IEnumerator MoveToSpawnpoint()
+    {
+        _coroutine = StartCoroutine(Mover.Move(_spawnpointPosition));
+
+        yield return _coroutine;
+
         IsBusy = false;
     }
 
-    public void MoveToResource(Resource resource)
+    public void StartMoveToResource(Resource resource)
     {
-        Mover.StartMoveToResource(resource);
+        StartCoroutine(MoveToResource(resource));
+    }
+
+    public void StartMoveToStorage()
+    {
+        StartCoroutine(MoveToStorage());
+    }
+
+    public void StartMoveToSpawnpoint()
+    {
+        StartCoroutine(MoveToSpawnpoint());
+    }
+
+    public void SetStoragePosition(Vector3 storagePosition)
+    {
+        _storagePostion = storagePosition;
+    }
+
+    public void SetSpawnpointPosition(Vector3 spawnpointPosition)
+    {
+        _spawnpointPosition = spawnpointPosition;
     }
 }

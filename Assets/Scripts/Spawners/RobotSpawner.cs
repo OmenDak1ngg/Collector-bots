@@ -12,13 +12,10 @@ public class RobotSpawner : Spawner<Robot>
     [SerializeField] private ResourceTracker _resourceTracker;
 
     private readonly string _noSpaceText = "нет свободного места для робота";
-    private readonly string _maxRobotsText = "превышено макс кол-во роботов";
 
     private float _spawnDelay = 0.2f;
 
     private WaitForSeconds _waitSpawn;
-
-    public List<Robot> AvalaibleRobots { get; private set; }
 
     public event Action<Robot> RobotCreated;
 
@@ -31,7 +28,6 @@ public class RobotSpawner : Spawner<Robot>
 
     private void Start()
     {
-        AvalaibleRobots = new List<Robot>();
         SpawnStartRobots();
     }
 
@@ -55,13 +51,6 @@ public class RobotSpawner : Spawner<Robot>
 
     protected override Robot OnInstantiate()
     {
-        if (AvalaibleRobots.Count >= _maxRobots)
-        {
-            _errorViewer.ShowText(_maxRobotsText);
-
-            return null;
-        }
-
         Robot robot = base.OnInstantiate();
 
         RobotCreated?.Invoke(robot);
@@ -83,19 +72,9 @@ public class RobotSpawner : Spawner<Robot>
             return;
         }
 
-        pooledObject.GetComponent<RobotMover>().SetSpawnpoint(spawnpoint);
+        pooledObject.SetSpawnpointPosition(spawnpoint);
         pooledObject.transform.position = spawnpoint;
 
         base.OnGet(pooledObject);
-
-        AvalaibleRobots.Add(pooledObject);
-
-    }
-
-    protected override void OnRelease(Robot pooledObject)
-    {
-        base.OnRelease(pooledObject);
-
-        AvalaibleRobots.Remove(pooledObject);
     }
 }

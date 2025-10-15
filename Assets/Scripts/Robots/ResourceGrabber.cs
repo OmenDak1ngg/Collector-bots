@@ -7,28 +7,27 @@ public class ResourceGrabber : MonoBehaviour
     [SerializeField] private ResourceCarryPoint _carryPoint;
     [SerializeField] private float _grabSpeed;
     
-    private ResourceTracker _resourceTracker;
-    private RobotMover _mover;
     private Resource _carriedResource;
+    private Robot _robot;
 
     public event Action ResourceGrabbed;
     public event Action PuttedResource;
 
     private void OnEnable()
     {
-        _mover.ReachedResource += StartGrabResource;
-        _mover.ReachedStorage += StartPutResource;
+        _robot.ReachedResource += StartGrabResource;
+        _robot.ReachedStorage += StartPutResource;
     }
 
     private void OnDisable()
     {
-        _mover.ReachedResource -= StartGrabResource;
-        _mover.ReachedStorage -= StartPutResource;
+        _robot.ReachedResource -= StartGrabResource;
+        _robot.ReachedStorage -= StartPutResource;
     }
 
     private void Awake()
     {
-        _mover = GetComponent<RobotMover>();
+        _robot = GetComponent<Robot>();
     }
 
     private void StartGrabResource(Resource resource)
@@ -63,7 +62,6 @@ public class ResourceGrabber : MonoBehaviour
 
         _carriedResource.transform.parent = null;
         PuttedResource?.Invoke();
-        _resourceTracker.UnMarkTaked(_carriedResource);
     }
 
     private IEnumerator MoveResourceToPoint(Vector3 pointPosition, Transform resourceTransform)
@@ -77,10 +75,5 @@ public class ResourceGrabber : MonoBehaviour
 
             yield return null;
         }
-    }
-
-    public void SetResourceTracker(ResourceTracker tracker)
-    {
-        _resourceTracker = tracker;
     }
 }

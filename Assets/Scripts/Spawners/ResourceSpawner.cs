@@ -8,20 +8,8 @@ public class ResourceSpawner : Spawner<Resource>
     [SerializeField] private int _maxResourcesCount = 3;
     [SerializeField] private float _delay;
 
-    [SerializeField] private Storage _storage;
-
     private int _currentResourcesCount;
     private WaitForSeconds _waitTime;
-
-    private void OnEnable()
-    {
-        _storage.ResourceAdded += OnRelease;
-    }
-
-    private void OnDisable()
-    {
-        _storage.ResourceAdded -= OnRelease;
-    }
 
     private void Start()
     {
@@ -47,6 +35,14 @@ public class ResourceSpawner : Spawner<Resource>
         _waitTime = new WaitForSeconds(_delay);
     }
 
+    protected override Resource OnInstantiate()
+    {
+        Resource resource = base.OnInstantiate();
+        resource.ReachedStorage += Release;
+
+        return resource;
+    }
+
     protected override void OnGet(Resource pooledObject)
     {
         base.OnGet(pooledObject);
@@ -61,5 +57,12 @@ public class ResourceSpawner : Spawner<Resource>
         base.OnRelease(pooledObject);
         pooledObject.Rigidbody.isKinematic = false;
         _currentResourcesCount -= 1;
+    }
+
+    protected override void OnDestory(Resource pooledObject)
+    {
+        pooledObject.ReachedStorage -= Release; 
+
+        base.OnDestory(pooledObject);
     }
 }

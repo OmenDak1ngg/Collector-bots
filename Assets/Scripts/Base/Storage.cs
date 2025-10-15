@@ -23,6 +23,7 @@ public class Storage : MonoBehaviour
     {
         if (other.TryGetComponent<Resource>(out Resource resource))
         {
+            resource.InvokeReachedStorage();
             AddResource(resource);
         }
     }

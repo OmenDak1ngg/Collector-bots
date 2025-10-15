@@ -13,30 +13,39 @@ public class Base : MonoBehaviour
     private readonly string _noResourceText = "не найдено ни одного ресурса";
     private readonly string _noRobotsText = "нет ни одного свободного робота";
 
+    private List<Robot> _robots;
+
     private void OnEnable()
     {
         _userInput.Scanned += SendRobotForResources;
         _robotSpawner.RobotCreated += SetupRobotForStorage;
+        _storage.ResourceAdded += _resourceTracker.UnMarkTaked;
     }
 
     private void OnDisable()
     {
         _userInput.Scanned -= SendRobotForResources;
         _robotSpawner.RobotCreated -= SetupRobotForStorage;
+        _storage.ResourceAdded -= _resourceTracker.UnMarkTaked;
     }
-    
+
+    private void Awake()
+    {
+        _robots = new List<Robot>();
+    }
+
     private void SetupRobotForStorage(Robot robot)
     {
-        robot.Mover.SetStorage(_storage.transform.position);
-        robot.Mover.SetResourceTracket(_resourceTracker);
-        robot.ResourceGrabber.SetResourceTracker(_resourceTracker);
+        robot.SetStoragePosition(_storage.transform.position);
+
+        _robots.Add(robot);
     }
 
     public void SendRobotForResources()
     {
-        List<Robot> robots = _robotSpawner.AvalaibleRobots;
-
         Resource closestResource = _scanner.GetClosestResource();
+
+        _resourceTracker.MarkTaked(closestResource);
 
         if (closestResource == null)
         {
@@ -44,14 +53,13 @@ public class Base : MonoBehaviour
             return;
         }
 
-        foreach (Robot robot in robots)
+        foreach (Robot robot in _robots)
         {
             if(robot.IsBusy)
                 continue;
 
-            robot.MoveToResource(closestResource);
+            robot.StartMoveToResource(closestResource);
 
-            robot.MarkBusy();
             return;
         }
 
