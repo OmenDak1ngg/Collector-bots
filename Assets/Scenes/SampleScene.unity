@@ -496,7 +496,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   _prefab: {fileID: 8237280982535561797, guid: 193c6439a43b693418e53932167667dd, type: 3}
-  _delay: 1
   _userInput: {fileID: 524963241}
 --- !u!1 &410087039
 GameObject:
@@ -899,6 +898,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2ea7ef10565d2b4c82cfa0395f22e34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _camera: {fileID: 330585545}
 --- !u!4 &524963242
 Transform:
   m_ObjectHideFlags: 0

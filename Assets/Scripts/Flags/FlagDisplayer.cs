@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
 public class FlagDisplayer : MonoBehaviour
@@ -6,37 +7,43 @@ public class FlagDisplayer : MonoBehaviour
     [SerializeField] private Camera _camera;
     [SerializeField] private LayerMask _groundLayerMask;
     [SerializeField] private Flag _prefab;
-    [SerializeField] private float _delay;
     [SerializeField] private UserInput _userInput;
 
-    private WaitForSeconds _delayWait;
+    private bool _isFlagPlaced;
+
     private float _raycastLength = 500;
     private Flag _flag;
 
     private Coroutine _coroutine;
 
+    public event Action<Vector3> FlagPlaced;
+
     private void OnEnable()
     {
         _userInput.DisplayedFlag += StartDisplayFlag;
         _userInput.HidedFlag += StopDisplayFlag;
+        _userInput.PlacedFlag += _ => PlaceFlag();
     }
 
     private void OnDisable()
     {
         _userInput.DisplayedFlag -= StartDisplayFlag;
         _userInput.HidedFlag -= StopDisplayFlag;
+        _userInput.PlacedFlag -= _ => PlaceFlag();
     }
 
     private void Awake()
     {
+        _isFlagPlaced = false;
         _flag = Instantiate(_prefab);
         _flag.gameObject.SetActive(false);
-        _delayWait = new WaitForSeconds(_delay);
     }
 
     private void StartDisplayFlag()
     {
-        Debug.Log("startedDisplay");
+        if (_isFlagPlaced)
+            return;
+
         _flag.gameObject.SetActive(true);
         _coroutine = StartCoroutine(DisplayFlag());
     }
@@ -55,26 +62,36 @@ public class FlagDisplayer : MonoBehaviour
     {
         while (enabled)
         {
-            Debug.Log("displaing");
-            _flag.transform.position = GetFlagPosition();
+            if(GetFlagPosition() != Vector3.zero)
+            {
+                Vector3 lookPosition = _camera.transform.position - _flag.transform.position;
 
-            yield return _delayWait;
+                _flag.transform.LookAt(lookPosition);
+                _flag.transform.position = GetFlagPosition();
+            }
+
+            yield return null;
         }
     }
 
     private Vector3 GetFlagPosition()
     {
-        Debug.Log("getted POs");
-
         Vector3 mousePosition = Input.mousePosition;
         Ray ray = _camera.ScreenPointToRay(mousePosition);
         RaycastHit hit;
 
-        if(Physics.Raycast(ray, out hit, _raycastLength ,_groundLayerMask))
+        if (Physics.Raycast(ray, out hit, _raycastLength, _groundLayerMask))
         {
             return hit.point;
         }
 
         return Vector3.zero;
+    }
+
+    private void PlaceFlag()
+    {
+        _isFlagPlaced = true;
+        StopCoroutine(_coroutine);
+        FlagPlaced?.Invoke(_flag.transform.position);
     }
 }

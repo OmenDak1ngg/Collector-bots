@@ -21,6 +21,7 @@ public class Robot : MonoBehaviour
 
     public event Action<Resource> ReachedResource;
     public event Action<Vector3> ReachedStorage;
+    public event Action ReachedFlag;
 
     private void OnEnable()
     {
@@ -69,6 +70,15 @@ public class Robot : MonoBehaviour
         IsBusy = false;
     }
 
+    private IEnumerator MoveToFlag(Vector3 flagPosition)
+    {
+        _coroutine = StartCoroutine(Mover.Move(flagPosition));
+
+        yield return _coroutine;
+
+        ReachedFlag?.Invoke();
+    }
+
     public void StartMoveToResource(Resource resource)
     {
         StartCoroutine(MoveToResource(resource));
@@ -82,6 +92,11 @@ public class Robot : MonoBehaviour
     public void StartMoveToSpawnpoint()
     {
         StartCoroutine(MoveToSpawnpoint());
+    }
+
+    public void StartMoveToFlag(Vector3 flagPosition)
+    {
+        StartCoroutine(MoveToFlag(flagPosition));
     }
 
     public void SetStoragePosition(Vector3 storagePosition)

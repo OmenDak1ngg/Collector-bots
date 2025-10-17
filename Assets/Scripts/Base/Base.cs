@@ -21,6 +21,7 @@ public class Base : MonoBehaviour
         _robotSpawner.RobotCreated += SetupRobotForStorage;
         _storage.ResourceAdded += _resourceTracker.UnMarkTaked;
         _storage.CollectedThreeResources += CreateRobot;
+        _userInput.PlacedFlag += SendRobotToFlag;
     }
 
     private void OnDisable()
@@ -29,6 +30,7 @@ public class Base : MonoBehaviour
         _robotSpawner.RobotCreated -= SetupRobotForStorage;
         _storage.ResourceAdded -= _resourceTracker.UnMarkTaked;
         _storage.CollectedThreeResources -= CreateRobot;
+        _userInput.PlacedFlag -= SendRobotToFlag;
     }
 
     private void Awake()
@@ -41,6 +43,17 @@ public class Base : MonoBehaviour
         robot.SetStoragePosition(_storage.transform.position);
 
         _robots.Add(robot);
+    }
+
+    private void SendRobotToFlag(Vector3 flagPosition)
+    {
+        foreach(Robot robot in _robots)
+        {
+            if (robot.IsBusy)
+                continue;
+
+            robot.StartMoveToFlag(flagPosition);
+        }
     }
 
     private void CreateRobot()

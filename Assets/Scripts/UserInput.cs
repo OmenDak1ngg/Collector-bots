@@ -3,18 +3,23 @@ using UnityEngine;
 
 public class UserInput : MonoBehaviour
 {
-    private readonly KeyCode ScanKey = KeyCode.LeftAlt;
-    private readonly KeyCode DisplayFlagKey = KeyCode.LeftControl;
+    [SerializeField] private Camera _camera;
 
-    private bool _isFlagDisplayed;
+    private readonly KeyCode ScanKey = KeyCode.LeftAlt;
+    private readonly KeyCode ClickKey = KeyCode.Mouse0;
+    private readonly KeyCode CancelKey = KeyCode.Escape;
+
+    private float _rayDistance = 500;
+    private bool _clickedOnBase;
 
     public event Action Scanned;
     public event Action DisplayedFlag;
     public event Action HidedFlag;
+    public event Action<Vector3> PlacedFlag;
 
     private void Awake()
-    {
-        _isFlagDisplayed = false;
+    { 
+        _clickedOnBase = false;
     }
 
     private void Update()
@@ -24,16 +29,36 @@ public class UserInput : MonoBehaviour
             Scanned?.Invoke();
         }
 
-        while (Input.GetKeyDown(DisplayFlagKey))
+        if (Input.GetKeyDown(ClickKey) && GetMouseCollider() != null && GetMouseCollider().TryGetComponent<Base>(out _))
         {
-            _isFlagDisplayed = true;
+            _clickedOnBase = true;
             DisplayedFlag?.Invoke();
-        } 
-
-        if(_isFlagDisplayed && Input.GetKeyUp(DisplayFlagKey))
-        {
-            HidedFlag?.Invoke();
-            _isFlagDisplayed = false;
         }
+
+        if(_clickedOnBase && Input.GetKeyDown(ClickKey) && GetMouseCollider() != null && GetMouseCollider().TryGetComponent<Base>(out _) == false)
+        {
+            _clickedOnBase = false;
+            PlacedFlag?.Invoke(GetMouseCollider().transform.position);
+        }
+
+        if(_clickedOnBase && Input.GetKeyDown(CancelKey))
+        {
+            _clickedOnBase = false;
+            HidedFlag?.Invoke();
+        }
+    }
+
+    private Collider GetMouseCollider()
+    {
+        Vector3 mousePosition = Input.mousePosition;
+        Ray ray = _camera.ScreenPointToRay(mousePosition);
+        RaycastHit hit;
+
+        if(Physics.Raycast(ray,out hit, _rayDistance))
+        {
+            return hit.collider;
+        }
+
+        return null;
     }
 }
