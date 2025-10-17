@@ -9,10 +9,13 @@ public class Storage : MonoBehaviour
 
     private readonly string _errorText = "у вас не хватает ресурсов";
 
+    private int _resourcesToCreateRobot = 3;
     private int _resourceCount;
 
     public event Action<int> ResourceUpdated;
     public event Action<Resource> ResourceAdded;
+
+    public event Action CollectedThreeResources;
 
     private void Awake()
     {
@@ -45,5 +48,11 @@ public class Storage : MonoBehaviour
         _resourceCount++;
         ResourceUpdated?.Invoke(_resourceCount);
         ResourceAdded?.Invoke(resource);
+
+        if(_resourceCount >= _resourcesToCreateRobot)
+        {
+            CollectedThreeResources?.Invoke();
+            DecreaseResources(_resourcesToCreateRobot);
+        }
     }
 }

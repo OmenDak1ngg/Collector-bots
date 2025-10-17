@@ -20,6 +20,7 @@ public class Base : MonoBehaviour
         _userInput.Scanned += SendRobotForResources;
         _robotSpawner.RobotCreated += SetupRobotForStorage;
         _storage.ResourceAdded += _resourceTracker.UnMarkTaked;
+        _storage.CollectedThreeResources += CreateRobot;
     }
 
     private void OnDisable()
@@ -27,6 +28,7 @@ public class Base : MonoBehaviour
         _userInput.Scanned -= SendRobotForResources;
         _robotSpawner.RobotCreated -= SetupRobotForStorage;
         _storage.ResourceAdded -= _resourceTracker.UnMarkTaked;
+        _storage.CollectedThreeResources -= CreateRobot;
     }
 
     private void Awake()
@@ -39,6 +41,11 @@ public class Base : MonoBehaviour
         robot.SetStoragePosition(_storage.transform.position);
 
         _robots.Add(robot);
+    }
+
+    private void CreateRobot()
+    {
+        _robotSpawner.Get();
     }
 
     public void SendRobotForResources()

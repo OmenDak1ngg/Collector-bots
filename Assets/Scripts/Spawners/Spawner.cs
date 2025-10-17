@@ -42,7 +42,7 @@ public class Spawner<T> : MonoBehaviour where T : MonoBehaviour
         Pool.Release(pooledObject);
     }
 
-    protected virtual void Get()
+    public virtual void Get()
     {
         Pool.Get();
     }
