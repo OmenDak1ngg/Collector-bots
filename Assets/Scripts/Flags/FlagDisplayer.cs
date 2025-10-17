@@ -31,7 +31,6 @@ public class FlagDisplayer : MonoBehaviour
     {
         _flag = Instantiate(_prefab);
         _flag.gameObject.SetActive(false);
-        Debug.Log(_flag.gameObject.activeSelf);
         _delayWait = new WaitForSeconds(_delay);
     }
 
