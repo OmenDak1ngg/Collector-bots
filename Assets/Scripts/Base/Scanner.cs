@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Scanner : MonoBehaviour
@@ -6,14 +7,28 @@ public class Scanner : MonoBehaviour
     [SerializeField] private MessageViewer _messageViewer;
     [SerializeField] private ResourceTracker _resourceTracker;
 
+    [SerializeField] private UserInput _userInput;
+
     private readonly string _scanStartedText = "скан начался";
+
+    public event Action<Resource> ResourceFounded;
+
+    private void OnEnable()
+    {
+        _userInput.Scanned += FindClosestResource;
+    }
+
+    private void OnDisable()
+    {
+        _userInput.Scanned -= FindClosestResource;
+    }
 
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(transform.position, _scanRadius);
     }
 
-    public Resource GetClosestResource()
+    public void FindClosestResource()
     {
         _messageViewer.ShowText(_scanStartedText);
 
@@ -42,6 +57,6 @@ public class Scanner : MonoBehaviour
             }
         }
 
-        return closestResource;
+        ResourceFounded?.Invoke(closestResource);
     }
 }

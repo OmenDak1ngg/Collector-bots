@@ -21,7 +21,7 @@ public class Robot : MonoBehaviour
 
     public event Action<Resource> ReachedResource;
     public event Action<Vector3> ReachedStorage;
-    public event Action ReachedFlag;
+    public event Action<Vector3> ReachedFlag;
 
     private void OnEnable()
     {
@@ -76,7 +76,8 @@ public class Robot : MonoBehaviour
 
         yield return _coroutine;
 
-        ReachedFlag?.Invoke();
+        ReachedFlag?.Invoke(flagPosition);
+        StartMoveToSpawnpoint();
     }
 
     public void StartMoveToResource(Resource resource)

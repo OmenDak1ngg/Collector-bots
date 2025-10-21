@@ -23,6 +23,7 @@ public class FlagDisplayer : MonoBehaviour
         _userInput.DisplayedFlag += StartDisplayFlag;
         _userInput.HidedFlag += StopDisplayFlag;
         _userInput.PlacedFlag += _ => PlaceFlag();
+        _flag.RobotArrived += OnRobotArrived;
     }
 
     private void OnDisable()
@@ -30,6 +31,7 @@ public class FlagDisplayer : MonoBehaviour
         _userInput.DisplayedFlag -= StartDisplayFlag;
         _userInput.HidedFlag -= StopDisplayFlag;
         _userInput.PlacedFlag -= _ => PlaceFlag();
+        _flag.RobotArrived -= OnRobotArrived;
     }
 
     private void Awake()
@@ -37,6 +39,15 @@ public class FlagDisplayer : MonoBehaviour
         _isFlagPlaced = false;
         _flag = Instantiate(_prefab);
         _flag.gameObject.SetActive(false);
+    }
+
+    private void OnRobotArrived()
+    {
+        if (_isFlagPlaced == false)
+            return;
+
+        _isFlagPlaced = false;
+        StopDisplayFlag();
     }
 
     private void StartDisplayFlag()

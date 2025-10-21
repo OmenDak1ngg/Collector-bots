@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections;
+﻿using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,45 +9,12 @@ public class RobotSpawner : Spawner<Robot>
     [SerializeField] private SpawnZone _spawnZone;
     [SerializeField] private int _maxRobots;
     [SerializeField] private ErrorViewer _errorViewer;
-    [SerializeField] private ResourceTracker _resourceTracker;
 
     private readonly string _noSpaceText = "нет свободного места для робота";
+    private readonly string _maxRobotsText = "превышено максимальное количетсво робото";
 
-    private float _spawnDelay = 0.2f;
-
-    private WaitForSeconds _waitSpawn;
-
+    private int _countOfRobots;
     public event Action<Robot> RobotCreated;
-
-    protected override void Awake()
-    {
-        _waitSpawn = new WaitForSeconds(_spawnDelay);
-
-        base.Awake();
-    }
-
-    private void Start()
-    {
-        SpawnStartRobots();
-    }
-
-    private void SpawnStartRobots()
-    {
-        StartCoroutine(SpawnRobot());
-    }
-
-    private IEnumerator SpawnRobot()
-    {
-        for (int i = 0; i < _startRobots; i++)
-        {
-            if (_startRobots > _maxRobots)
-                _startRobots = _maxRobots;
-
-            Pool.Get();
-
-            yield return _waitSpawn;
-        }
-    }
 
     protected override Robot OnInstantiate()
     {
@@ -60,6 +27,12 @@ public class RobotSpawner : Spawner<Robot>
 
     protected override void OnGet(Robot pooledObject)
     {
+        if (_countOfRobots >= _maxRobots)
+        {
+            _errorViewer.ShowText(_maxRobotsText);
+            return;
+        }
+
         if (pooledObject == null)
             return;
 

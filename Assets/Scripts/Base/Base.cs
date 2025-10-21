@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,11 +14,14 @@ public class Base : MonoBehaviour
     private readonly string _noResourceText = "не найдено ни одного ресурса";
     private readonly string _noRobotsText = "нет ни одного свободного робота";
 
+    private int _startRobots = 3;
     private List<Robot> _robots;
 
+    public event Action<Vector3> RobotReachedFlag;
+    
     private void OnEnable()
     {
-        _userInput.Scanned += SendRobotForResources;
+        _scanner.ResourceFounded += SendRobotForResources;
         _robotSpawner.RobotCreated += SetupRobotForStorage;
         _storage.ResourceAdded += _resourceTracker.UnMarkTaked;
         _storage.CollectedThreeResources += CreateRobot;
@@ -26,11 +30,16 @@ public class Base : MonoBehaviour
 
     private void OnDisable()
     {
-        _userInput.Scanned -= SendRobotForResources;
+        _scanner.ResourceFounded -= SendRobotForResources;
         _robotSpawner.RobotCreated -= SetupRobotForStorage;
         _storage.ResourceAdded -= _resourceTracker.UnMarkTaked;
         _storage.CollectedThreeResources -= CreateRobot;
         _userInput.PlacedFlag -= SendRobotToFlag;
+
+        foreach(Robot robot in _robots)
+        {
+            robot.ReachedFlag -= OnRobotReachedFlag;
+        }
     }
 
     private void Awake()
@@ -38,11 +47,20 @@ public class Base : MonoBehaviour
         _robots = new List<Robot>();
     }
 
+    private void Start()
+    {
+        for(int i = 0;i < _startRobots; i++)
+        {
+            CreateRobot();
+        }
+    }
+
     private void SetupRobotForStorage(Robot robot)
     {
         robot.SetStoragePosition(_storage.transform.position);
 
         _robots.Add(robot);
+        robot.ReachedFlag += OnRobotReachedFlag;
     }
 
     private void SendRobotToFlag(Vector3 flagPosition)
@@ -53,6 +71,7 @@ public class Base : MonoBehaviour
                 continue;
 
             robot.StartMoveToFlag(flagPosition);
+            break;
         }
     }
 
@@ -61,13 +80,16 @@ public class Base : MonoBehaviour
         _robotSpawner.Get();
     }
 
-    public void SendRobotForResources()
+    private void OnRobotReachedFlag(Vector3 flagPosition)
     {
-        Resource closestResource = _scanner.GetClosestResource();
+        RobotReachedFlag?.Invoke(flagPosition);
+    }
 
-        _resourceTracker.MarkTaked(closestResource);
+    public void SendRobotForResources(Resource resource)
+    {
+        _resourceTracker.MarkTaked(resource);
 
-        if (closestResource == null)
+        if (resource == null)
         {
             _errorViewer.ShowText(_noResourceText);
             return;
@@ -78,7 +100,7 @@ public class Base : MonoBehaviour
             if(robot.IsBusy)
                 continue;
 
-            robot.StartMoveToResource(closestResource);
+            robot.StartMoveToResource(resource);
 
             return;
         }
