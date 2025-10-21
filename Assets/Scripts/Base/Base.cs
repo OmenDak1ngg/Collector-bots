@@ -1,21 +1,25 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking.PlayerConnection;
 
 public class Base : MonoBehaviour
 {
     [SerializeField] private Scanner _scanner;
     [SerializeField] private RobotSpawner _robotSpawner;
-    [SerializeField] private UserInput _userInput;
-    [SerializeField] private ErrorViewer _errorViewer;
     [SerializeField] private Storage _storage;
-    [SerializeField] private ResourceTracker _resourceTracker;
 
     private readonly string _noResourceText = "не найдено ни одного ресурса";
     private readonly string _noRobotsText = "нет ни одного свободного робота";
 
+    private UserInput _userInput;
+    private ResourceTracker _resourceTracker;
+    private ErrorViewer _errorViewer;
+    
     private int _startRobots = 3;
     private List<Robot> _robots;
+
+    public Scanner Scanner => _scanner;
 
     public event Action<Vector3> RobotReachedFlag;
     
@@ -106,5 +110,12 @@ public class Base : MonoBehaviour
         }
 
         _errorViewer.ShowText(_noRobotsText);
+    }
+
+    public void SetupOnCreate(UserInput userInput, ErrorViewer errorViewer, ResourceTracker resourceTracker)
+    {
+        _userInput = userInput;
+        _errorViewer = errorViewer;
+        _resourceTracker = resourceTracker;
     }
 }

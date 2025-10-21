@@ -8,11 +8,11 @@ public class RobotSpawner : Spawner<Robot>
     [SerializeField] private int _startRobots = 3;
     [SerializeField] private SpawnZone _spawnZone;
     [SerializeField] private int _maxRobots;
-    [SerializeField] private ErrorViewer _errorViewer;
-
+    
     private readonly string _noSpaceText = "нет свободного места для робота";
     private readonly string _maxRobotsText = "превышено максимальное количетсво робото";
 
+    private ErrorViewer _errorViewer;
     private int _countOfRobots;
     public event Action<Robot> RobotCreated;
 
@@ -49,5 +49,10 @@ public class RobotSpawner : Spawner<Robot>
         pooledObject.transform.position = spawnpoint;
 
         base.OnGet(pooledObject);
+    }
+
+    public void SetupOnCreate(ErrorViewer errorViewer)
+    {
+        _errorViewer = errorViewer;
     }
 }

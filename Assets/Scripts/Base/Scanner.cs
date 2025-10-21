@@ -4,10 +4,10 @@ using UnityEngine;
 public class Scanner : MonoBehaviour
 {
     [SerializeField] private float _scanRadius;
-    [SerializeField] private MessageViewer _messageViewer;
-    [SerializeField] private ResourceTracker _resourceTracker;
 
-    [SerializeField] private UserInput _userInput;
+    private MessageViewer _messageViewer;
+    private ResourceTracker _resourceTracker;
+    private UserInput _userInput;
 
     private readonly string _scanStartedText = "скан начался";
 
@@ -58,5 +58,12 @@ public class Scanner : MonoBehaviour
         }
 
         ResourceFounded?.Invoke(closestResource);
+    }
+
+    public void SetupOnCreate(MessageViewer messageVievwer, ResourceTracker resourceTracker, UserInput userInput)
+    {
+        _messageViewer = messageVievwer;
+        _resourceTracker = resourceTracker;
+        _userInput = userInput;
     }
 }

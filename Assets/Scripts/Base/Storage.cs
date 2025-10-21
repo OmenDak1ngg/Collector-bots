@@ -5,10 +5,9 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 public class Storage : MonoBehaviour
 {
-    [SerializeField] private ErrorViewer _errorViewer;
-
     private readonly string _errorText = "у вас не хватает ресурсов";
 
+    private ErrorViewer _errorViewer;
     private int _resourcesToCreateRobot = 3;
     private int _resourceCount;
 
@@ -54,5 +53,10 @@ public class Storage : MonoBehaviour
             CollectedThreeResources?.Invoke();
             DecreaseResources(_resourcesToCreateRobot);
         }
+    }
+
+    public void SetupOnCreate(ErrorViewer errorViewer)
+    {
+        _errorViewer = errorViewer;
     }
 }

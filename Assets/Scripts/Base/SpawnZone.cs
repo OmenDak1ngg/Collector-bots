@@ -5,8 +5,8 @@ public class SpawnZone : MonoBehaviour
     [SerializeField] private float _minDistanceBetweenRobots = 1f;
 
     [SerializeField] private int _maxCountOfAttempts = 50;
-    [SerializeField] private ErrorViewer _errorViewer;
 
+    private ErrorViewer _errorViewer;
     private const int _sizeDivider = 2;
 
     private bool IsSpawnpointTaked(Vector3 position)
@@ -49,5 +49,10 @@ public class SpawnZone : MonoBehaviour
         } while (IsSpawnpointTaked(randomSpawnpoint));
 
         return randomSpawnpoint;
+    }
+
+    public void SetupOnCreate(ErrorViewer errorViewer)
+    {
+        _errorViewer = errorViewer;
     }
 }
