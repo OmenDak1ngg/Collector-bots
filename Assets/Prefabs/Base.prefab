@@ -68,7 +68,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _minDistanceBetweenRobots: 2
   _maxCountOfAttempts: 50
-  _errorViewer: {fileID: 0}
 --- !u!1 &1202967806258005865
 GameObject:
   m_ObjectHideFlags: 0
@@ -203,7 +202,6 @@ MonoBehaviour:
   _startRobots: 3
   _spawnZone: {fileID: 7684936679387509019}
   _maxRobots: 10
-  _errorViewer: {fileID: 0}
 --- !u!1 &2252780164076443258
 GameObject:
   m_ObjectHideFlags: 0
@@ -224,7 +222,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2529731380043339427
 Transform:
   m_ObjectHideFlags: 0
@@ -447,7 +445,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d29d5c1a52ce264f9ffd937621bdbdc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _errorViewer: {fileID: 0}
 --- !u!65 &7473392196748467535
 BoxCollider:
   m_ObjectHideFlags: 0

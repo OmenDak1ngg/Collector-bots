@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking.PlayerConnection;
 
 public class Base : MonoBehaviour
 {
@@ -15,7 +14,9 @@ public class Base : MonoBehaviour
     private UserInput _userInput;
     private ResourceTracker _resourceTracker;
     private ErrorViewer _errorViewer;
-    
+
+    private Base _thatBase;
+
     private int _startRobots = 3;
     private List<Robot> _robots;
 
@@ -48,6 +49,7 @@ public class Base : MonoBehaviour
 
     private void Awake()
     {
+        _thatBase = GetComponent<Base>();
         _robots = new List<Robot>();
     }
 
@@ -69,6 +71,9 @@ public class Base : MonoBehaviour
 
     private void SendRobotToFlag(Vector3 flagPosition)
     {
+        if (_userInput.ClickedBase != _thatBase)
+            return;
+            
         foreach(Robot robot in _robots)
         {
             if (robot.IsBusy)

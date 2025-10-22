@@ -11,6 +11,7 @@ public class UserInput : MonoBehaviour
 
     private float _rayDistance = 500;
     private bool _clickedOnBase;
+    public Base ClickedBase;
 
     public event Action Scanned;
     public event Action DisplayedFlag;
@@ -29,8 +30,9 @@ public class UserInput : MonoBehaviour
             Scanned?.Invoke();
         }
 
-        if (Input.GetKeyDown(ClickKey) && GetMouseCollider() != null && GetMouseCollider().TryGetComponent<Base>(out _))
+        if (Input.GetKeyDown(ClickKey) && GetMouseCollider() != null && GetMouseCollider().TryGetComponent<Base>(out Base clickedBase))
         {
+            ClickedBase = clickedBase;
             _clickedOnBase = true;
             DisplayedFlag?.Invoke();
         }

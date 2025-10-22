@@ -16,8 +16,6 @@ public class FlagDisplayer : MonoBehaviour
 
     private Coroutine _coroutine;
 
-    public event Action<Vector3> FlagPlaced;
-
     private void OnEnable()
     {
         _userInput.DisplayedFlag += StartDisplayFlag;
@@ -61,9 +59,12 @@ public class FlagDisplayer : MonoBehaviour
 
     private void StopDisplayFlag()
     {
+        Debug.Log("1");
+
         if (_coroutine == null)
             return;
 
+        Debug.Log("2");
         _flag.gameObject.SetActive(false);
         StopCoroutine(_coroutine);
         _coroutine = null;
@@ -103,6 +104,5 @@ public class FlagDisplayer : MonoBehaviour
     {
         _isFlagPlaced = true;
         StopCoroutine(_coroutine);
-        FlagPlaced?.Invoke(_flag.transform.position);
     }
 }

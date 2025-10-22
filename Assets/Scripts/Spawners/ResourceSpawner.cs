@@ -11,6 +11,14 @@ public class ResourceSpawner : Spawner<Resource>
     private int _currentResourcesCount;
     private WaitForSeconds _waitTime;
 
+    protected override void Awake()
+    {
+        base.Awake();
+
+        _currentResourcesCount = 0;
+        _waitTime = new WaitForSeconds(_delay);
+    }
+
     private void Start()
     {
         StartCoroutine(SpawnObjects());
@@ -25,14 +33,6 @@ public class ResourceSpawner : Spawner<Resource>
 
             yield return _waitTime;
         }
-    }
-
-    protected override void Awake()
-    {
-        base.Awake();
-
-        _currentResourcesCount = 0;
-        _waitTime = new WaitForSeconds(_delay);
     }
 
     protected override Resource OnInstantiate()

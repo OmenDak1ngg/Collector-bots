@@ -13,13 +13,17 @@ public class RobotMover : MonoBehaviour
     private void Awake()
     {
         _agent = GetComponent<NavMeshAgent>();
+        _agent.speed = _speed;
     }
 
-    public IEnumerator Move(Vector3 targetPosition)
+    public IEnumerator Move(Vector3 targetPosition, float distanceError = 0f)
     {
+        if(distanceError == 0)
+            distanceError = _distanceError;
+
         _agent.SetDestination(targetPosition);
 
-        while (Vector3.SqrMagnitude(transform.position - targetPosition) > _distanceError)
+        while (Vector3.SqrMagnitude(transform.position - targetPosition) > distanceError)
             yield return null;
 
         _agent.ResetPath();

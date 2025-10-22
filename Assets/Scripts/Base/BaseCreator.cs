@@ -15,7 +15,7 @@ public class BaseCreator : MonoBehaviour
 
     [SerializeField] private NavMeshSurface _navMeshSurface;
 
-    private Vector3 _startBasePos;
+    [SerializeField] private Vector3 _startBasePos;
 
     private List<Base> _bases;
 
@@ -30,29 +30,27 @@ public class BaseCreator : MonoBehaviour
     private void Awake()
     {
         _bases = new List<Base>();
-        _startBasePos = Vector3.zero;
         CreateBase(_startBasePos);
     }
 
-    public void CreateBase(Vector3 flagPosition)
+    public void CreateBase(Vector3 spawnPosition)
     {
         Base newBase = Instantiate(_prefab);
 
         newBase.SetupOnCreate(_userInput, _errorViewer, _resourceTracker);
         newBase.Scanner.SetupOnCreate(_messageViewer, _resourceTracker, _userInput);
-        
         newBase.GetComponentInChildren<SpawnZone>().SetupOnCreate(_errorViewer);
         newBase.GetComponentInChildren<RobotSpawner>().SetupOnCreate(_errorViewer);
         newBase.GetComponentInChildren<ResourceViewer>().SetupOnCreate(_camera);
         newBase.GetComponentInChildren<Storage>().SetupOnCreate(_errorViewer);  
-
         newBase.RobotReachedFlag += CreateBase;
 
-        newBase.transform.position = flagPosition;
+        newBase.transform.position = spawnPosition;
         newBase.transform.parent = this.transform;
       
         _navMeshSurface.BuildNavMesh();
 
+        newBase.gameObject.SetActive(true);
         _bases.Add(newBase);
     }
 }

@@ -9,11 +9,14 @@ using UnityEngine.AI;
 [RequireComponent(typeof(RobotMover))]
 [RequireComponent(typeof(ResourceGrabber))]
 [RequireComponent(typeof(NavMeshAgent))]
+
 public class Robot : MonoBehaviour
 {
     private Coroutine _coroutine;
     private Vector3 _storagePostion;
     private Vector3 _spawnpointPosition;
+
+    private float _distanceErrorToFlag = 300f;
 
     public RobotMover Mover { get; private set; }   
     public ResourceGrabber ResourceGrabber { get; private set; }
@@ -72,7 +75,7 @@ public class Robot : MonoBehaviour
 
     private IEnumerator MoveToFlag(Vector3 flagPosition)
     {
-        _coroutine = StartCoroutine(Mover.Move(flagPosition));
+        _coroutine = StartCoroutine(Mover.Move(flagPosition,_distanceErrorToFlag));
 
         yield return _coroutine;
 
