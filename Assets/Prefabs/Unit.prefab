@@ -446,7 +446,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4167baa0d6f68cd44991a7228a5618d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 4
+  _speed: 8.39
   _distanceError: 10
 --- !u!114 &7233599984862628892
 MonoBehaviour:

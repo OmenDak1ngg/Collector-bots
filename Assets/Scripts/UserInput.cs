@@ -4,6 +4,7 @@ using UnityEngine;
 public class UserInput : MonoBehaviour
 {
     [SerializeField] private Camera _camera;
+    [SerializeField] private Flag _flag;
 
     private readonly KeyCode ScanKey = KeyCode.LeftAlt;
     private readonly KeyCode ClickKey = KeyCode.Mouse0;
@@ -11,12 +12,12 @@ public class UserInput : MonoBehaviour
 
     private float _rayDistance = 500;
     private bool _clickedOnBase;
-    public Base ClickedBase;
+    public Base ClickedBase { get; private set; }
 
     public event Action Scanned;
     public event Action DisplayedFlag;
     public event Action HidedFlag;
-    public event Action<Vector3> PlacedFlag;
+    public event Action<Flag> PlacedFlag;
 
     private void Awake()
     { 
@@ -40,7 +41,7 @@ public class UserInput : MonoBehaviour
         if(_clickedOnBase && Input.GetKeyDown(ClickKey) && GetMouseCollider() != null && GetMouseCollider().TryGetComponent<Base>(out _) == false)
         {
             _clickedOnBase = false;
-            PlacedFlag?.Invoke(GetMouseCollider().transform.position);
+            PlacedFlag?.Invoke(_flag);
         }
 
         if(_clickedOnBase && Input.GetKeyDown(CancelKey))

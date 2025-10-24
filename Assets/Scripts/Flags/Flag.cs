@@ -1,9 +1,18 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
+[RequireComponent(typeof(BoxCollider))]
 public class Flag : MonoBehaviour
 {
-    public event Action RobotArrived; 
+    private BoxCollider _boxCollider;
+
+    public event Action RobotArrived;
+
+    private void Awake()
+    {
+        _boxCollider = GetComponent<BoxCollider>();
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -11,5 +20,10 @@ public class Flag : MonoBehaviour
         {
             RobotArrived?.Invoke();
         }
+    }
+
+    public void SetColliderSize(float size)
+    {
+        _boxCollider.size = new Vector3(size/2, size/2, size/2);
     }
 }

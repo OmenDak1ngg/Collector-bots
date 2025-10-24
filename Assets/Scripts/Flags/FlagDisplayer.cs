@@ -8,11 +8,11 @@ public class FlagDisplayer : MonoBehaviour
     [SerializeField] private LayerMask _groundLayerMask;
     [SerializeField] private Flag _prefab;
     [SerializeField] private UserInput _userInput;
+    [SerializeField] private Flag _flag;
 
     private bool _isFlagPlaced;
 
     private float _raycastLength = 500;
-    private Flag _flag;
 
     private Coroutine _coroutine;
 
@@ -35,8 +35,6 @@ public class FlagDisplayer : MonoBehaviour
     private void Awake()
     {
         _isFlagPlaced = false;
-        _flag = Instantiate(_prefab);
-        _flag.gameObject.SetActive(false);
     }
 
     private void OnRobotArrived()
@@ -59,12 +57,9 @@ public class FlagDisplayer : MonoBehaviour
 
     private void StopDisplayFlag()
     {
-        Debug.Log("1");
-
         if (_coroutine == null)
             return;
 
-        Debug.Log("2");
         _flag.gameObject.SetActive(false);
         StopCoroutine(_coroutine);
         _coroutine = null;

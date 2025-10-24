@@ -6,25 +6,27 @@ using UnityEngine;
 public class Storage : MonoBehaviour
 {
     private readonly string _errorText = "у вас не хватает ресурсов";
+    
+    public int ResourceCount { get; private set; }
 
     private ErrorViewer _errorViewer;
     private int _resourcesToCreateRobot = 3;
-    private int _resourceCount;
 
     public event Action<int> ResourceUpdated;
     public event Action<Resource> ResourceAdded;
 
-    public event Action CollectedThreeResources;
+    public event Action CollectedToCreateRobot;
 
     private void Awake()
     {
-        _resourceCount = 0;
+        ResourceCount = 0;
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.TryGetComponent<Resource>(out Resource resource))
         {
+            Debug.Log("resource in storage");
             resource.InvokeReachedStorage();
             AddResource(resource);
         }
@@ -32,26 +34,25 @@ public class Storage : MonoBehaviour
 
     public void DecreaseResources(int decreaseCount)
     {
-        if(decreaseCount > _resourceCount)
+        if(decreaseCount > ResourceCount)
         {
             _errorViewer.ShowText(_errorText);
             return;
         }
 
-        _resourceCount -= decreaseCount;
-        ResourceUpdated?.Invoke(_resourceCount);
+        ResourceCount -= decreaseCount;
+        ResourceUpdated?.Invoke(ResourceCount);
     }
 
-    public void AddResource(Resource resource)
+    private void AddResource(Resource resource)
     {
-        _resourceCount++;
-        ResourceUpdated?.Invoke(_resourceCount);
+        ResourceCount++;
+        ResourceUpdated?.Invoke(ResourceCount);
         ResourceAdded?.Invoke(resource);
 
-        if(_resourceCount >= _resourcesToCreateRobot)
+        if(ResourceCount >= _resourcesToCreateRobot)
         {
-            CollectedThreeResources?.Invoke();
-            DecreaseResources(_resourcesToCreateRobot);
+            CollectedToCreateRobot?.Invoke();
         }
     }
 

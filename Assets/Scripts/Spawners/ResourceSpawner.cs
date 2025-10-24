@@ -45,11 +45,10 @@ public class ResourceSpawner : Spawner<Resource>
 
     protected override void OnGet(Resource pooledObject)
     {
-        base.OnGet(pooledObject);
-
         _currentResourcesCount += 1;
         pooledObject.transform.position = transform.position;
         _thrower.Throw(pooledObject);
+        base.OnGet(pooledObject);
     }
 
     protected override void OnRelease(Resource pooledObject)

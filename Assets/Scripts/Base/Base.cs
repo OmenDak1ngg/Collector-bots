@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,6 +11,7 @@ public class Base : MonoBehaviour
 
     private readonly string _noResourceText = "не найдено ни одного ресурса";
     private readonly string _noRobotsText = "нет ни одного свободного робота";
+    private readonly string _notEnoughRobotsText = "не хватает роботов для постройки базы";
 
     private UserInput _userInput;
     private ResourceTracker _resourceTracker;
@@ -17,8 +19,14 @@ public class Base : MonoBehaviour
 
     private Base _thatBase;
 
+    private bool _canBuildRobot;
+    private int _resourcesToBuild = 5;
     private int _startRobots = 3;
     private List<Robot> _robots;
+
+    private float _sleepTime = 0.5f;
+    private WaitForSeconds _sleep;
+    private int _resourcesToCreateRobot;
 
     public Scanner Scanner => _scanner;
 
@@ -29,8 +37,8 @@ public class Base : MonoBehaviour
         _scanner.ResourceFounded += SendRobotForResources;
         _robotSpawner.RobotCreated += SetupRobotForStorage;
         _storage.ResourceAdded += _resourceTracker.UnMarkTaked;
-        _storage.CollectedThreeResources += CreateRobot;
-        _userInput.PlacedFlag += SendRobotToFlag;
+        _storage.CollectedToCreateRobot += CreateRobot;
+        _userInput.PlacedFlag += StartSendRobotToFlag;
     }
 
     private void OnDisable()
@@ -38,8 +46,8 @@ public class Base : MonoBehaviour
         _scanner.ResourceFounded -= SendRobotForResources;
         _robotSpawner.RobotCreated -= SetupRobotForStorage;
         _storage.ResourceAdded -= _resourceTracker.UnMarkTaked;
-        _storage.CollectedThreeResources -= CreateRobot;
-        _userInput.PlacedFlag -= SendRobotToFlag;
+        _storage.CollectedToCreateRobot -= CreateRobot;
+        _userInput.PlacedFlag -= StartSendRobotToFlag;
 
         foreach(Robot robot in _robots)
         {
@@ -49,6 +57,8 @@ public class Base : MonoBehaviour
 
     private void Awake()
     {
+        _canBuildRobot = true;
+        _sleep = new WaitForSeconds(_sleepTime);
         _thatBase = GetComponent<Base>();
         _robots = new List<Robot>();
     }
@@ -69,28 +79,53 @@ public class Base : MonoBehaviour
         robot.ReachedFlag += OnRobotReachedFlag;
     }
 
-    private void SendRobotToFlag(Vector3 flagPosition)
+    private void StartSendRobotToFlag(Flag flag)
     {
         if (_userInput.ClickedBase != _thatBase)
             return;
-            
-        foreach(Robot robot in _robots)
+
+        if (_robots.Count <= 1)
+        {
+            _errorViewer.ShowText(_notEnoughRobotsText);
+            return;
+        }
+
+        _canBuildRobot = false;
+
+        StartCoroutine(SendRobotToFlag(flag));
+    }
+
+    private IEnumerator SendRobotToFlag(Flag flag)
+    {
+        while(_storage.ResourceCount < _resourcesToBuild)
+        {
+            yield return _sleep;
+        }
+
+        foreach (Robot robot in _robots)
         {
             if (robot.IsBusy)
                 continue;
 
-            robot.StartMoveToFlag(flagPosition);
+            _storage.DecreaseResources(_resourcesToBuild);
+            flag.SetColliderSize(robot.GetDistanceErrorToFlag());
+            robot.StartMoveToFlag(flag.transform.position);
             break;
         }
     }
 
     private void CreateRobot()
     {
+        if (_canBuildRobot == false)
+            return;
+
+        _storage.DecreaseResources(_resourcesToCreateRobot);
         _robotSpawner.Get();
     }
 
     private void OnRobotReachedFlag(Vector3 flagPosition)
     {
+        _canBuildRobot = true;
         RobotReachedFlag?.Invoke(flagPosition);
     }
 

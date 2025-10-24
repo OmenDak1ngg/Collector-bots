@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -76,6 +75,7 @@ public class Robot : MonoBehaviour
     private IEnumerator MoveToFlag(Vector3 flagPosition)
     {
         _coroutine = StartCoroutine(Mover.Move(flagPosition,_distanceErrorToFlag));
+        IsBusy = true;
 
         yield return _coroutine;
 
@@ -111,5 +111,10 @@ public class Robot : MonoBehaviour
     public void SetSpawnpointPosition(Vector3 spawnpointPosition)
     {
         _spawnpointPosition = spawnpointPosition;
+    }
+
+    public float GetDistanceErrorToFlag()
+    {
+        return _distanceErrorToFlag;
     }
 }

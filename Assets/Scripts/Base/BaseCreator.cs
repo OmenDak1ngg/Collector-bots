@@ -39,7 +39,6 @@ public class BaseCreator : MonoBehaviour
 
         newBase.SetupOnCreate(_userInput, _errorViewer, _resourceTracker);
         newBase.Scanner.SetupOnCreate(_messageViewer, _resourceTracker, _userInput);
-        newBase.GetComponentInChildren<SpawnZone>().SetupOnCreate(_errorViewer);
         newBase.GetComponentInChildren<RobotSpawner>().SetupOnCreate(_errorViewer);
         newBase.GetComponentInChildren<ResourceViewer>().SetupOnCreate(_camera);
         newBase.GetComponentInChildren<Storage>().SetupOnCreate(_errorViewer);  
