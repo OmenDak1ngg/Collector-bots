@@ -41,6 +41,7 @@ public class UserInput : MonoBehaviour
         if(_clickedOnBase && Input.GetKeyDown(ClickKey) && GetMouseCollider() != null && GetMouseCollider().TryGetComponent<Base>(out _) == false)
         {
             _clickedOnBase = false;
+            Debug.Log("placed");
             PlacedFlag?.Invoke(_flag);
         }
 

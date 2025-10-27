@@ -47,9 +47,9 @@ public class BaseCreator : MonoBehaviour
         newBase.transform.position = spawnPosition;
         newBase.transform.parent = this.transform;
       
-        _navMeshSurface.BuildNavMesh();
 
         newBase.gameObject.SetActive(true);
+        _navMeshSurface.BuildNavMesh();
         _bases.Add(newBase);
     }
 }

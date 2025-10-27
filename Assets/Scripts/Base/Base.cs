@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class Base : MonoBehaviour
@@ -97,20 +98,28 @@ public class Base : MonoBehaviour
 
     private IEnumerator SendRobotToFlag(Flag flag)
     {
+        bool isChoosedRobot = false;
+
         while(_storage.ResourceCount < _resourcesToBuild)
         {
             yield return _sleep;
         }
 
-        foreach (Robot robot in _robots)
+        while(isChoosedRobot == false)
         {
-            if (robot.IsBusy)
-                continue;
+            foreach (Robot robot in _robots)
+            {
+                if (robot.IsBusy)
+                    continue;
 
-            _storage.DecreaseResources(_resourcesToBuild);
-            flag.SetColliderSize(robot.GetDistanceErrorToFlag());
-            robot.StartMoveToFlag(flag.transform.position);
-            break;
+                isChoosedRobot = true;
+                _storage.DecreaseResources(_resourcesToBuild);
+                flag.SetColliderSize(robot.GetDistanceErrorToFlag());
+                robot.StartMoveToFlag(flag.transform.position);
+                break;
+            }
+
+            yield return _sleep;
         }
     }
 

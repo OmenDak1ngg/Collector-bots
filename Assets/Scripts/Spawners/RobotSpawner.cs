@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class RobotSpawner : Spawner<Robot>
 {
-    [SerializeField] private int _startRobots = 3;
     [SerializeField] private SpawnZone _spawnZone;
     [SerializeField] private int _maxRobots;
     

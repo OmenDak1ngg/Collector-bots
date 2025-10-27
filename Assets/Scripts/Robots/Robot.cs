@@ -15,7 +15,7 @@ public class Robot : MonoBehaviour
     private Vector3 _storagePostion;
     private Vector3 _spawnpointPosition;
 
-    private float _distanceErrorToFlag = 300f;
+    private float _distanceErrorToFlag = 50f;
 
     public RobotMover Mover { get; private set; }   
     public ResourceGrabber ResourceGrabber { get; private set; }

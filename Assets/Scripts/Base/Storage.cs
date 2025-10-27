@@ -26,7 +26,10 @@ public class Storage : MonoBehaviour
     {
         if (other.TryGetComponent<Resource>(out Resource resource))
         {
-            Debug.Log("resource in storage");
+            if (resource.Collected == true)
+                return;
+
+            resource.MarkCollected();
             resource.InvokeReachedStorage();
             AddResource(resource);
         }

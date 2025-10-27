@@ -32,12 +32,12 @@ public class ResourceGrabber : MonoBehaviour
 
     private void StartGrabResource(Resource resource)
     {
+        _carriedResource = resource;
         StartCoroutine(GrabResource(resource.transform));
         
         resource.transform.parent = transform;
         resource.Rigidbody.isKinematic = true;
         resource.Collider.isTrigger = true;
-        _carriedResource = resource;
     }
 
     private void StartPutResource(Vector3 storagePosition)
@@ -66,14 +66,21 @@ public class ResourceGrabber : MonoBehaviour
 
     private IEnumerator MoveResourceToPoint(Vector3 pointPosition, Transform resourceTransform)
     {
+        _robot.Mover.SetZeroVelocity();
+
         Vector3 resourcePosition = resourceTransform.position;
 
         while (resourcePosition != pointPosition)
         {
+            if (_carriedResource.Collected)
+                break;
+
             resourcePosition = Vector3.MoveTowards(resourcePosition, pointPosition, _grabSpeed * Time.deltaTime);
             resourceTransform.position = resourcePosition;
 
             yield return null;
         }
+
+        _robot.Mover.ResetVelocity();
     }
 }

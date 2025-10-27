@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -27,5 +28,15 @@ public class RobotMover : MonoBehaviour
             yield return null;
 
         _agent.ResetPath();
+    }
+
+    public void SetZeroVelocity()
+    {
+        _agent.speed = 0f;
+    }
+
+    public void ResetVelocity()
+    {
+        _agent.speed = _speed;
     }
 }
