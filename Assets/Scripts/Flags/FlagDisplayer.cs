@@ -13,6 +13,7 @@ public class FlagDisplayer : MonoBehaviour
     private bool _isFlagPlaced;
 
     private float _raycastLength = 500;
+    private Robot _senededRobot;
 
     private Coroutine _coroutine;
 
@@ -41,7 +42,6 @@ public class FlagDisplayer : MonoBehaviour
     {
         if (_isFlagPlaced == false)
             return;
-
         _isFlagPlaced = false;
         StopDisplayFlag();
     }

@@ -33,6 +33,7 @@ public class UserInput : MonoBehaviour
 
         if (Input.GetKeyDown(ClickKey) && GetMouseCollider() != null && GetMouseCollider().TryGetComponent<Base>(out Base clickedBase))
         {
+            Debug.Log("i am waiting a place to flag");
             ClickedBase = clickedBase;
             _clickedOnBase = true;
             DisplayedFlag?.Invoke();
@@ -41,8 +42,8 @@ public class UserInput : MonoBehaviour
         if(_clickedOnBase && Input.GetKeyDown(ClickKey) && GetMouseCollider() != null && GetMouseCollider().TryGetComponent<Base>(out _) == false)
         {
             _clickedOnBase = false;
-            Debug.Log("placed");
             PlacedFlag?.Invoke(_flag);
+            Debug.Log($"flag placed");
         }
 
         if(_clickedOnBase && Input.GetKeyDown(CancelKey))

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 
 [RequireComponent(typeof(BoxCollider))]
@@ -14,12 +13,9 @@ public class Flag : MonoBehaviour
         _boxCollider = GetComponent<BoxCollider>();
     }
 
-    private void OnTriggerEnter(Collider other)
+    public void InvokeRobotArrived()
     {
-        if(other.TryGetComponent<Robot>(out _))
-        {
-            RobotArrived?.Invoke();
-        }
+        RobotArrived?.Invoke();
     }
 
     public void SetColliderSize(float size)

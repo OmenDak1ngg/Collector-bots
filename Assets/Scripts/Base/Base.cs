@@ -116,6 +116,7 @@ public class Base : MonoBehaviour
                 _storage.DecreaseResources(_resourcesToBuild);
                 flag.SetColliderSize(robot.GetDistanceErrorToFlag());
                 robot.StartMoveToFlag(flag.transform.position);
+                robot.SetFlag(flag);
                 break;
             }
 
@@ -140,8 +141,6 @@ public class Base : MonoBehaviour
 
     public void SendRobotForResources(Resource resource)
     {
-        _resourceTracker.MarkTaked(resource);
-
         if (resource == null)
         {
             _errorViewer.ShowText(_noResourceText);
@@ -153,6 +152,7 @@ public class Base : MonoBehaviour
             if(robot.IsBusy)
                 continue;
 
+            _resourceTracker.MarkTaked(resource);
             robot.StartMoveToResource(resource);
 
             return;

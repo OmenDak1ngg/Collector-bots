@@ -16,6 +16,7 @@ public class Robot : MonoBehaviour
     private Vector3 _spawnpointPosition;
 
     private float _distanceErrorToFlag = 50f;
+    private Flag _flag;
 
     public RobotMover Mover { get; private set; }   
     public ResourceGrabber ResourceGrabber { get; private set; }
@@ -79,6 +80,7 @@ public class Robot : MonoBehaviour
 
         yield return _coroutine;
 
+        _flag.InvokeRobotArrived();
         ReachedFlag?.Invoke(flagPosition);
         StartMoveToSpawnpoint();
     }
@@ -116,5 +118,10 @@ public class Robot : MonoBehaviour
     public float GetDistanceErrorToFlag()
     {
         return _distanceErrorToFlag;
+    }
+
+    public void SetFlag(Flag flag)
+    {
+        _flag = flag;
     }
 }
