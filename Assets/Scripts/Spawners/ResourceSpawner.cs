@@ -49,6 +49,7 @@ public class ResourceSpawner : Spawner<Resource>
         pooledObject.transform.position = transform.position;
         _thrower.Throw(pooledObject);
         base.OnGet(pooledObject);
+        pooledObject.transform.parent = this.transform;
         pooledObject.UnMarkCollected();
     }
 

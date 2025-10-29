@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 
 public class Base : MonoBehaviour
@@ -9,6 +8,7 @@ public class Base : MonoBehaviour
     [SerializeField] private Scanner _scanner;
     [SerializeField] private RobotSpawner _robotSpawner;
     [SerializeField] private Storage _storage;
+    [SerializeField] private Flag _flag;
 
     private readonly string _noResourceText = "не найдено ни одного ресурса";
     private readonly string _noRobotsText = "нет ни одного свободного робота";
@@ -17,18 +17,17 @@ public class Base : MonoBehaviour
     private UserInput _userInput;
     private ResourceTracker _resourceTracker;
     private ErrorViewer _errorViewer;
-
     private Base _thatBase;
-
     private bool _canBuildRobot;
-    private int _resourcesToBuild = 5;
-    private int _startRobots = 3;
     private List<Robot> _robots;
-
+    
+    private int _resourcesToBuild = 5;
+    private int _resourcesToCreateRobot = 3;
+    private int _startRobots = 3;
     private float _sleepTime = 0.5f;
     private WaitForSeconds _sleep;
-    private int _resourcesToCreateRobot;
 
+    public Flag Flag => _flag;
     public Scanner Scanner => _scanner;
 
     public event Action<Vector3> RobotReachedFlag;
@@ -68,7 +67,7 @@ public class Base : MonoBehaviour
     {
         for(int i = 0;i < _startRobots; i++)
         {
-            CreateRobot();
+            _robotSpawner.Get();
         }
     }
 

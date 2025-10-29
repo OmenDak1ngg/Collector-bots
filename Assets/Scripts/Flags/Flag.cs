@@ -6,7 +6,7 @@ public class Flag : MonoBehaviour
 {
     private BoxCollider _boxCollider;
 
-    public event Action RobotArrived;
+    public event Action<Flag> RobotArrived;
 
     private void Awake()
     {
@@ -15,7 +15,7 @@ public class Flag : MonoBehaviour
 
     public void InvokeRobotArrived()
     {
-        RobotArrived?.Invoke();
+        RobotArrived?.Invoke(this);
     }
 
     public void SetColliderSize(float size)

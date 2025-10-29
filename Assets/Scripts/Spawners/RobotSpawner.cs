@@ -44,6 +44,7 @@ public class RobotSpawner : Spawner<Robot>
             return;
         }
 
+        pooledObject.transform.parent = _spawnZone.transform;
         pooledObject.SetSpawnpointPosition(spawnpoint);
         pooledObject.transform.position = spawnpoint;
 

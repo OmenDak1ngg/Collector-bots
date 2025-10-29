@@ -4,19 +4,21 @@ using UnityEngine;
 public class UserInput : MonoBehaviour
 {
     [SerializeField] private Camera _camera;
-    [SerializeField] private Flag _flag;
+    [SerializeField] private LayerMask _baseLayerMask;
 
     private readonly KeyCode ScanKey = KeyCode.LeftAlt;
     private readonly KeyCode ClickKey = KeyCode.Mouse0;
     private readonly KeyCode CancelKey = KeyCode.Escape;
 
+    private Flag _baseFlag;
     private float _rayDistance = 500;
     private bool _clickedOnBase;
+
     public Base ClickedBase { get; private set; }
 
     public event Action Scanned;
-    public event Action DisplayedFlag;
-    public event Action HidedFlag;
+    public event Action<Flag> DisplayedFlag;
+    public event Action<Flag> HidedFlag;
     public event Action<Flag> PlacedFlag;
 
     private void Awake()
@@ -31,25 +33,24 @@ public class UserInput : MonoBehaviour
             Scanned?.Invoke();
         }
 
-        if (Input.GetKeyDown(ClickKey) && GetMouseCollider() != null && GetMouseCollider().TryGetComponent<Base>(out Base clickedBase))
+        if (Input.GetKeyDown(ClickKey) &&  GetMouseCollider() != null && GetMouseCollider().TryGetComponent<Base>(out Base clickedBase))
         {
-            Debug.Log("i am waiting a place to flag");
             ClickedBase = clickedBase;
+            _baseFlag = clickedBase.Flag;
             _clickedOnBase = true;
-            DisplayedFlag?.Invoke();
+            DisplayedFlag?.Invoke(_baseFlag);
         }
 
-        if(_clickedOnBase && Input.GetKeyDown(ClickKey) && GetMouseCollider() != null && GetMouseCollider().TryGetComponent<Base>(out _) == false)
+        if(_clickedOnBase && Input.GetKeyDown(ClickKey) && GetMouseCollider() == null)
         {
             _clickedOnBase = false;
-            PlacedFlag?.Invoke(_flag);
-            Debug.Log($"flag placed");
+            PlacedFlag?.Invoke(_baseFlag);
         }
 
         if(_clickedOnBase && Input.GetKeyDown(CancelKey))
         {
             _clickedOnBase = false;
-            HidedFlag?.Invoke();
+            HidedFlag?.Invoke(_baseFlag);
         }
     }
 
@@ -59,7 +60,7 @@ public class UserInput : MonoBehaviour
         Ray ray = _camera.ScreenPointToRay(mousePosition);
         RaycastHit hit;
 
-        if(Physics.Raycast(ray,out hit, _rayDistance))
+        if(Physics.Raycast(ray,out hit, _rayDistance, _baseLayerMask))
         {
             return hit.collider;
         }

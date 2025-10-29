@@ -1,16 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Collider))]
 public class Storage : MonoBehaviour
 {
     private readonly string _errorText = "у вас не хватает ресурсов";
-    
-    public int ResourceCount { get; private set; }
 
     private ErrorViewer _errorViewer;
     private int _resourcesToCreateRobot = 3;
+
+    public int ResourceCount { get; private set; }
 
     public event Action<int> ResourceUpdated;
     public event Action<Resource> ResourceAdded;

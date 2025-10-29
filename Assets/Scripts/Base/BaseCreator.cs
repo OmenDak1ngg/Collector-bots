@@ -19,6 +19,14 @@ public class BaseCreator : MonoBehaviour
 
     private List<Base> _bases;
 
+    private void OnEnable()
+    {
+        foreach (Base robotBase in _bases)
+        {
+            robotBase.RobotReachedFlag += CreateBase;
+        }
+    }
+
     private void OnDisable()
     {
         foreach(Base robotBase in _bases)
