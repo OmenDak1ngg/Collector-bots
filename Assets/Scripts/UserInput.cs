@@ -37,18 +37,21 @@ public class UserInput : MonoBehaviour
         {
             ClickedBase = clickedBase;
             _baseFlag = clickedBase.Flag;
+
             _clickedOnBase = true;
             DisplayedFlag?.Invoke(_baseFlag);
         }
 
         if(_clickedOnBase && Input.GetKeyDown(ClickKey) && GetMouseCollider() == null)
         {
+            _baseFlag.MarkPlaced();
             _clickedOnBase = false;
             PlacedFlag?.Invoke(_baseFlag);
         }
 
         if(_clickedOnBase && Input.GetKeyDown(CancelKey))
         {
+            ClickedBase.Flag.UnMarkFlagPlaced();
             _clickedOnBase = false;
             HidedFlag?.Invoke(_baseFlag);
         }

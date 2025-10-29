@@ -54,6 +54,9 @@ public class FlagDragger : MonoBehaviour
 
     public void StartDrag(Flag flag)
     {
+        if (flag.IsFlagPlaced == true)
+            return;
+
         _coroutine = StartCoroutine(DragFlag(flag));
     }
 

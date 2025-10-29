@@ -43,6 +43,7 @@ public class FlagDisplayer : MonoBehaviour
 
     public void StopDisplayFlag(Flag flag)
     {
+        flag.UnMarkFlagPlaced();
         flag.gameObject.SetActive(false);
     }
 }

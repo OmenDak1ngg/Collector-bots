@@ -38,6 +38,10 @@ public class BaseCreator : MonoBehaviour
     private void Awake()
     {
         _bases = new List<Base>();
+    }
+
+    private void Start()
+    {
         CreateBase(_startBasePos);
     }
 
